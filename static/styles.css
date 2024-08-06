@@ -1,0 +1,32 @@
+body {
+    background-color: #f8f9fa;
+}
+.container {
+    max-width: 600px;
+    margin-top: 50px;
+}
+#recordButton {
+    width: 150px;
+}
+#transcription {
+    min-height: 200px;
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 15px;
+    margin-top: 20px;
+}
+.transcription-output {
+    min-height: 150px;
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+}
+@media (max-width: 640px) {
+    .button-container {
+        flex-direction: column;
+    }
+    .button-container > button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
