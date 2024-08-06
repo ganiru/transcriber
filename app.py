@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 import os
+from dotenv import load_dotenv
 from groq import Groq
 
+load_dotenv()
 app = Flask(__name__, static_folder='static')
 
 # Groq client for audio
@@ -24,7 +26,6 @@ def transcribe():
     # Transcribe audio using Whisper
     print("Attempting to transcribe with Groq Whisper...")
     filename = "recording.wav"
-    print(">>>Audio file info:", audio_file)
     transcription = groq_client.audio.transcriptions.create(
         file=(filename, audio_content),
         model="whisper-large-v3",
@@ -34,7 +35,7 @@ def transcribe():
         temperature=0.2  # Optional
     )
     print(transcription)
-    print("ChatGroq processing successful")
+    # print("ChatGroq processing successful")
 
     return jsonify({"transcription": transcription.text})
 
