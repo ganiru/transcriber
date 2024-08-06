@@ -5,13 +5,11 @@ body {
 .container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
 }
 
 .transcription-output {
-    min-height: 200px;
+    min-height: 150px;
     max-height: none;
-    height:100%;
     overflow-y: auto;
     white-space: pre-wrap;
 }
@@ -22,6 +20,11 @@ body {
 
 #recordButton:hover {
     transform: scale(1.05);
+}
+
+#recordingStatus,
+#transcribingStatus {
+    transition: opacity 0.3s ease;
 }
 
 @media (max-width: 640px) {

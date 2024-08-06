@@ -37,7 +37,7 @@ def transcribe():
     print(transcription)
     # print("ChatGroq processing successful")
 
-    return jsonify({"transcription": transcription.text})
+    return jsonify({"transcription": transcription.text.strip()})
 
 
 if __name__ == '__main__':

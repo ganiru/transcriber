@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const micIcon = document.getElementById('micIcon');
     const transcriptionOutput = document.getElementById('transcriptionOutput');
     const recordingStatus = document.getElementById('recordingStatus');
+    const transcribingStatus = document.getElementById('transcribingStatus');
     let mediaRecorder;
     let audioChunks = [];
     let allStreams;
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         recordButton.classList.add('bg-red-500', 'hover:bg-red-600');
         micIcon.classList.add('animate-pulse');
         recordingStatus.classList.remove('hidden');
+        transcribingStatus.classList.add('hidden');
     }
 
     function stopRecording() {
@@ -48,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         recordButton.classList.add('bg-blue-500', 'hover:bg-blue-600');
         micIcon.classList.remove('animate-pulse');
         recordingStatus.classList.add('hidden');
+        transcribingStatus.classList.remove('hidden');
     }
 
     function sendAudioToServer() {
@@ -66,15 +69,29 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             console.log('Received response:', data);
             transcriptionOutput.textContent += data.transcription + '\r\n';
+            transcribingStatus.classList.add('hidden');
+            if (data.transcription != '') {
+                copyButton.disabled = false;
+                downloadButton.disabled = false;
+            }
+            else {
+                copyButton.disabled = true;
+                downloadButton.disabled = true;
+            }
         })
         .catch(error => {
             console.error('Error:', error);
             transcriptionOutput.textContent = 'An error occurred during transcription.';
+            copyButton.disabled = true;
+            downloadButton.disabled = true;            
+            transcribingStatus.classList.add('hidden');
         });
     }
 
     const copyButton = document.getElementById('copyButton');
     const downloadButton = document.getElementById('downloadButton');
+    copyButton.disabled = true;
+    downloadButton.disabled = true;
     const clearButton = document.getElementById('clearButton');
 
     copyButton.addEventListener('click', copyToClipboard);
