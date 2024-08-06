@@ -1,74 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transcriber</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>"
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        .transcription-output {
-            min-height: 150px;
-            max-height: calc(100vh - 300px);
-            overflow-y: auto;
-        }
-        @media (max-width: 640px) {
-            .button-container {
-                flex-direction: column;
-            }
-            .button-container > button {
-                width: 100%;
-                margin-bottom: 0.5rem;
-            }
-        }
-    </style>
-</head>
-<body class="bg-gray-100 dark:bg-gray-900">
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-8">
-            <h1 id="transcriber" class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-200">Transcriber</h1>
 
-            <div class="relative">
-                <div class="block bg-gray-600 w-14 h-8 rounded-full"></div>
-                <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
-            </div>
-
-            <span class="ml-3 text-gray-700 dark:text-gray-300 font-medium">Dark Mode</span>
-        </div>
-
-        <div class="max-w-2xl mx-auto">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <div class="flex justify-center mb-4">
-                    <button id="recordButton" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full flex items-center">
-                        <svg id="micIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                        </svg>
-                        <span id="buttonText">Record</span>
-                    </button>
-                </div>
-                
-                <div id="recordingStatus" class="text-center text-red-500 font-bold mb-4 hidden animate-pulse">
-                    Recording. Press to stop recording.
-                </div>
-
-                <div id="transcriptionOutput" class="transcription-output bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4 text-gray-700 dark:text-gray-300 mb-4"></div>
-
-                <div class="button-container flex justify-between space-x-2 text-sm">
-                    <div class="flex space-x-2">
-                        <button id="copyButton" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded">
-                            Copy to Clipboard
-                        </button>
-                        <button id="downloadButton" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded">
-                            Download as Text
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Transcriber</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body class="bg-gray-100">
+        <div class="container mx-auto px-4 py-8">
+            <h1 id="transcriber" class="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">TranscribeX</h1>
+    
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-center mb-4">
+                        <button id="recordButton" class="w-16 h-16 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                            <svg id="micIcon" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                            </svg>
                         </button>
                     </div>
-                    <button id="clearButton" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-                        Clear
-                    </button>
+    
+                    <div id="recordingStatus" class="text-center text-red-500 font-bold mb-4 hidden animate-pulse">
+                        Recording. Press to stop.
+                    </div>
+    
+                    <div id="transcriptionOutput" class="transcription-output bg-gray-50 border border-gray-200 rounded-lg p-4 text-gray-700 mb-4"></div>
+    
+                    <div class="button-container flex justify-between lg:space-x-2 text-sm">
+                        <div class="flex lg:space-x-2">
+                            <button id="copyButton" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded">
+                                Copy
+                            </button>
+                            <button id="downloadButton" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded">
+                                Download
+                            </button>
+                        </div>
+                        <button id="clearButton" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                            Clear
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</body>
-</html>
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </body>
+    </html>

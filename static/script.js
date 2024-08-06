@@ -1,22 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    //const themeToggle = document.getElementById('theme-toggle');
-    const html = document.documentElement;
-/* 
-    themeToggle.addEventListener('change', () => {
-        if (themeToggle.checked) {
-            html.classList.remove('light');
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-            html.classList.add('light');
-        }
-    }); */
-
     const recordButton = document.getElementById('recordButton');
     const micIcon = document.getElementById('micIcon');
-    const buttonText = document.getElementById('buttonText');
     const transcriptionOutput = document.getElementById('transcriptionOutput');
-    transcriptionOutput.setAttribute('style', 'white-space: pre-wrap;');
     const recordingStatus = document.getElementById('recordingStatus');
     let mediaRecorder;
     let audioChunks = [];
@@ -51,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Recording started');
         recordButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
         recordButton.classList.add('bg-red-500', 'hover:bg-red-600');
-        buttonText.textContent = 'Stop';
         micIcon.classList.add('animate-pulse');
         recordingStatus.classList.remove('hidden');
     }
@@ -59,11 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function stopRecording() {
         console.log('Stopping recording...');
         mediaRecorder.stop();
-        // clear the streams
         allStreams.getTracks().forEach(track => track.stop());
         recordButton.classList.remove('bg-red-500', 'hover:bg-red-600');
         recordButton.classList.add('bg-blue-500', 'hover:bg-blue-600');
-        buttonText.textContent = 'Record';
         micIcon.classList.remove('animate-pulse');
         recordingStatus.classList.add('hidden');
     }
