@@ -113,7 +113,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'transcription.txt';
+
+        // build the date for the filename
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+        const day = today.getDate();
+        const hour = today.getHours();
+        const minute = today.getMinutes();
+        const second = today.getSeconds();
+        const now = `${year}${month}${day}${hour}${minute}${second}`;
+        
+        a.download = `transcript_${now}.txt`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

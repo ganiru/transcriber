@@ -9,7 +9,7 @@ body {
 
 .transcription-output {
     min-height: 150px;
-    max-height: none;
+    max-height: 45vh;
     overflow-y: auto;
     white-space: pre-wrap;
 }
