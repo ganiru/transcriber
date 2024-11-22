@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const socket = io();
     const recordButton = document.getElementById('recordButton');
     const micIcon = document.getElementById('micIcon');
     const transcriptionOutput = document.getElementById('transcriptionOutput');
@@ -58,25 +57,36 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Sending audio to server...');
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
         audioChunks = [];
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            socket.emit('audio_data', event.target.result);
-        };
-        reader.readAsArrayBuffer(audioBlob);
-    }
 
-    socket.on('transcription_result', (data) => {
-        console.log('Received transcription:', data);
-        transcriptionOutput.textContent += data.transcription + '\r\n';
-        transcribingStatus.classList.add('hidden');
-        if (data.transcription != '') {
-            copyButton.disabled = false;
-            downloadButton.disabled = false;
-        } else {
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.wav');
+
+        fetch('/transcribe', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Received response:', data);
+            transcriptionOutput.textContent += data.transcription + '\r\n';
+            transcribingStatus.classList.add('hidden');
+            if (data.transcription != '') {
+                copyButton.disabled = false;
+                downloadButton.disabled = false;
+            }
+            else {
+                copyButton.disabled = true;
+                downloadButton.disabled = true;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            transcriptionOutput.textContent = 'An error occurred during transcription.';
             copyButton.disabled = true;
-            downloadButton.disabled = true;
-        }
-    });
+            downloadButton.disabled = true;            
+            transcribingStatus.classList.add('hidden');
+        });
+    }
 
     const copyButton = document.getElementById('copyButton');
     const downloadButton = document.getElementById('downloadButton');
@@ -104,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const a = document.createElement('a');
         a.href = url;
 
+        // build the date for the filename
         const today = new Date();
         const year = today.getFullYear();
         const month = today.getMonth() + 1;
